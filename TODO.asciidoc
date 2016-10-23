@@ -5,4 +5,4 @@
 * Publish the downloadable PKG and RPM packages at e.g. a special branch of this project.
 * Provide some more examples, e.g. the more-aggressive Java Garbage Collector tuning solutions.
 * Explore systemd integration for Linux.
-
+* Complete the long-planned feature for custom extensibility of the script (default configs based on the symlink name or service instance name that the script was called by).
