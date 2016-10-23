@@ -1,0 +1,101 @@
+= COS cataliner
+
+The better init script (or service method) for popular Java web application
+servers on Unix/Linux platforms.
+
+== Rationale and Overview
+
+Default Tomcat/Catalina scripts are dumb and naive, to be honest.
+
+=== The Pains...
+
+Pointing fingers at a few specific pains that have burnt us in the past with
+the standard Tomcat scripts, here goes:
+
+* The common `startup.sh` script spawns a JVM and quits (long before the web
+  applications have initialized and are ready to work - especially to service
+  their clients that can be set up as dependencies in an OS service management
+  framework such as Solaris SMF or Linux systemd)
+* The common `shutdown.sh` script spawns a JVM which connects to the service
+  port of the running webserver JVM and commands it to shut down. This is good
+  until either the host OS is constrained and can not spawn the extra JVM, or
+  the webserver JVM has locked up and does not respond to this command in a
+  timely manner, or ever.
+* As a result, the typical `restart` routine of tomcat deployments just calls
+  the `shutdown.sh` and `startup.sh` scripts and assumes everything will just
+  work. Practice has taught us that it rarely does, at least not when things
+  have already gone south in the server environment. In such cases the best
+  outcome is inconvenience - that the new appserver does not start because
+  TCP ports are still listened to by the old instance; in worse cases data
+  corruption can occur as several copies of the single-copy software access it.
+* The standard way to provide customized Java options for Tomcat is, or at
+  least was for a long time, to change its startup scripts or at best make
+  an includable file with environment variables. This is not very portable
+  and tends to be overwritten during upgrades or not get backed up during
+  deployment migrations.
+
+=== ...and the Gains
+
+This project makes app server startup/shutdown/restart more reliable and
+dependable:
+
+* For startup action it does so by monitoring the appserver log file for
+  certain strings that signal completion of webapp initialization, and the
+  `cataliner start` script exits with success only then (and if the string
+  does not appear within a configured timeout - the script can report failure
+  of the appserver). The script also detects whether some new `java` process
+  opened access to the log file at all (otherwise the JVM failed to start or
+  got blocked on something, and that fault might be hidden by standard script).
+* For shutdowns, the standard script can be followed up by an escalated series
+  of SIGTERM, SIGINT and SIGKILL signals sent from the OS to the JVM `java`
+  process after specified timeouts are exceeded, doing the best it can to do
+  indeed stop the appserver as requested.
+* As a result, the `cataliner restart` action can safely be implemented as
+  `cataliner stop + cataliner start`.
+* For Java configurations, the `cataliner` script supports several options:
+** includable files (name based on name of the script, so with symlinks one
+  copy of the script can be used to drive several unrelated deployments);
+** built-in defaults for certain basenames (best-practice settings to serve
+  certain web-applications that we deploy and maintain) similarly picked by
+  basename of the symlink used to execute the script;
+** environment variables "`export`"ed by yet another wrapper script which
+  would call `cataliner`;
+** on Solaris 10+ and illumos based systems with SMF support, settings for
+  an instance of the service can be maintained directly in SMF properties
+  of this instance; some SMF manifests are provided as practical examples.
+  Likewise, the same copy of `cataliner` script can drive the lifecycle of
+  several unrelated appserver instances.
+
+The `cataliner` can also play along with scripts from `COSas` and `COSjisql`
+packages that let enable some more functionality, such as probing dependency
+instances (web, ldap or database services are supported out of the box) as
+well as results of the startup (specified URL in the launched webapp responds
+as expected), and time-constrained execution of certain commands.
+These additional settings can be specified in the configuration files or
+service properties, same locations as for Java options explained above.
+
+To some extent, similar issues also plague the standard scripts of JBoss and
+Glassfish application servers, so the script has limited support for them too
+(e.g. the JVM configuration of Glassfish is set up in the domain files so it
+is not covered by this script -- but detecting completion of startup and/or
+probing the dependencies can be set up with `cataliner` just fine).
+
+== Historical note
+
+NOTE: This project's opensourced (Github) life starts without a copy of tracked
+pre-history, as its initial code drop is merged and sanitized from internal and
+end-user projects.
+
+For what it's worth, the initial code drop is based on internal CVS ID
+`$Id: cataliner.sh,v 1.116 2014/09/10 17:06:00 jim Exp $`
+so code up to this point is
+----
+Copyright (C) 2009-2014 Jim Klimov, JSC COS&HT
+----
+with helpful input from Dmitry Mozhzherin and Dmitry Gruby of JSC COS&HT.
+
+The script got a few subsequent refinements for usage in open-sourced projects
+which are
+----
+Copyright (C) 2014-2016 by Jim Klimov
+----
