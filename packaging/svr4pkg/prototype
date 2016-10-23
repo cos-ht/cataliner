@@ -1,0 +1,16 @@
+i pkginfo=./pkginfo
+i depend
+d none etc 0755 root sys
+d none etc/init.d 0755 root sys
+f none etc/init.d/cataliner.sh 0755 root sys
+d none etc/default 0755 root sys
+d none opt 0755 root sys
+d none opt/COSas 0755 root sys
+d none opt/COSas/smf-manifest 0755 root sys
+f none opt/COSas/smf-manifest/tomcat-magnolia.xml 0644 root sys
+f none opt/COSas/smf-manifest/tomcat-alfresco-nonroot.xml 0644 root sys
+f none opt/COSas/smf-manifest/tomcat-alfresco-root.xml 0644 root sys
+f none opt/COSas/smf-manifest/tomcat-opensso.xml 0644 root sys
+d none opt/COSas/example 0755 root sys
+f none opt/COSas/example/alfresco-example.sh 0755 root sys
+f none opt/COSas/example/check-magnolia-example.sh 0755 root sys
