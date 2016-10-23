@@ -1,0 +1,47 @@
+<?xml version='1.0'?>
+<!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
+<service_bundle type='manifest' name='export'>
+  <service name='application/tomcat' type='service' version='0'>
+    <dependency name='network' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/milestone/network:default'/>
+    </dependency>
+    <dependency name='filesystem-local' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/system/filesystem/local:default'/>
+    </dependency>
+    <instance name='opensso' enabled='false'>
+      <method_context project=':default' resource_pool=':default' working_directory=':default'>
+        <method_credential limit_privileges=':default'
+         privileges='basic,net_privaddr' supp_groups=':default'
+         group=':default' user='tomcat'/>
+        <!-- NOTE: this privilege set allows an unprivileged user account
+             to utilize privileged ports like HTTP = 80/tcp -->
+      </method_context>
+      <exec_method name='start' type='method' exec='/etc/init.d/cataliner.sh %m' timeout_seconds='0'>
+        <method_context/>
+      </exec_method>
+      <exec_method name='stop' type='method' exec='/etc/init.d/cataliner.sh %m' timeout_seconds='0'>
+        <method_context/>
+      </exec_method>
+      <property_group name='cataliner' type='application'>
+        <propval name='CATALINER_APPSERVER_DIR' type='astring' value='/opt/tomcat'/>
+        <propval name='JAVA_HOME' type='astring' value='/opt/java'/>
+        <propval name='JAVA_OPTS' type='astring' value='-Xmx1024m -Dfile.encoding=UTF-8'/>
+        <propval name='CATALINA_OPTS' type='astring' value='-'/>
+        <propval name='CATALINA_OPTS_MEM' type='astring' value='-'/>
+        <propval name='CATALINER_PROBE_POSTSTART_AMLOGIN_FLAG' type='boolean' value='true'/>
+        <propval name='CATALINER_PROBE_PRESTART_LDAP_FLAG' type='boolean' value='true'/>
+        <propval name='CATALINER_PROBE_PRESTART_LDAP_HOST' type='astring' value='dps'/>
+        <propval name='CATALINER_PROBE_PRESTART_LDAP_PORT' type='astring' value='389'/>
+        <propval name='CATALINER_PROBE_PRESTART_LDAP_TIMEOUT' type='integer' value='10'/>
+      </property_group>
+    </instance>
+    <template>
+      <common_name>
+        <loctext xml:lang='C'>Apache Tomcat, Java Servlet Container, which hosts an OpenSSO authentication service</loctext>
+      </common_name>
+      <documentation>
+        <doc_link name='apache.org' uri='http://tomcat.apache.org/'/>
+      </documentation>
+    </template>
+  </service>
+</service_bundle>
