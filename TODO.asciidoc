@@ -1,0 +1,8 @@
+= TODO for the cataliner-framework repo
+
+* As the code came from a sanitized origins of an internal project, make sure it still works after the clean-up ;)
+* Review packaging procedures for SVR4 and RPM to automate respins of packages; automate as much as possible by a Makefile.
+* Publish the downloadable PKG and RPM packages at e.g. a special branch of this project.
+* Provide some more examples, e.g. the more-aggressive Java Garbage Collector tuning solutions.
+* Explore systemd integration for Linux.
+
