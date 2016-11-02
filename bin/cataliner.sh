@@ -4134,7 +4134,7 @@ case "$CATALINER_SCRIPT_APP" in
 		#ftp_proxy="$http_proxy"
 		#export http_proxy https_proxy ftp_proxy
 
-		[ x"$CATALINER_REGEX_STARTED" != 'x-' ] && CATALINER_REGEX_STARTED='INFO: Jenkins is fully up and running'
+		[ x"$CATALINER_REGEX_STARTED" != 'x-' ] && CATALINER_REGEX_STARTED='INFO:? .*Jenkins is fully up and running'
 		[ x"$CATALINER_WORKDIR" = x ] && CATALINER_WORKDIR="$CATALINER_APPSERVER_DIR/logs"
 		;;
 	*generic-tomcat*)
