@@ -28,14 +28,17 @@
       </exec_method>
       <property_group name='cataliner' type='application'>
         <propval name='CATALINER_APPSERVER_DIR' type='astring' value='/opt/tomcat'/>
-        <!-- propval name='JAVA_HOME' type='astring' value='/opt/java'/ -->
+        <!-- propval name='JAVA_HOME' type='astring' value='/opt/jdk/latest'/ -->
+        <!-- propval name='JENKINS_HOME' type='astring' value='/var/lib/jenkins'/ -->
         <propval name='CATALINER_SMF_CONFIGFILE_EXCLUSIVE' type='boolean' value='true'/>
         <propval name='CATALINER_SMF_CONFIGFILE_PATH' type='astring' value='/etc/default/jenkins-tomcat.conf'/>
+        <propval name='CATALINER_NONROOT' type='boolean' value='true'/>
+        <propval name='CATALINER_NONROOT_USERNAME' type='astring' value='jenkins'/>
       </property_group>
     </instance>
     <template>
       <common_name>
-        <loctext xml:lang='C'>Apache Tomcat, Java Servlet Container, which hosts Magnolia website content-management system</loctext>
+        <loctext xml:lang='C'>Apache Tomcat, Java Servlet Container, which hosts a Jenkins CI system</loctext>
       </common_name>
       <documentation>
         <doc_link name='apache.org' uri='http://tomcat.apache.org/'/>
