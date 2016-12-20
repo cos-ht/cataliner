@@ -1234,10 +1234,10 @@ run_as() {
                 OVERLANG=""
                 [ x"$CATALINER_LANG" != x ] && OVERLANG="export LANG; LANG='$CATALINER_LANG';"
                 [ x"$CATALINER_LC_ALL" != x ] && OVERLANG="$OVERLANG export LC_ALL; LC_ALL='$CATALINER_LC_ALL';"
-                ( su - "$RUNAS_USER" -c " ( $OVERLANG JAVA_OPTS='$JAVA_OPTS'; CATALINA_OPTS='$CATALINA_OPTS'; JAVA_HOME='$JAVA_HOME'; export JAVA_OPTS CATALINA_OPTS JAVA_HOME; $*) 2>&4 1>&3" ) 3>&1 4>&2 1>/dev/null 2>/dev/null
+                ( su - "$RUNAS_USER" -c " ( $OVERLANG JAVA_OPTS='$JAVA_OPTS'; CATALINA_OPTS='$CATALINA_OPTS'; JAVA_HOME='$JAVA_HOME'; export JAVA_OPTS CATALINA_OPTS JAVA_HOME; $* ) 2>&4 1>&3" ) 3>&1 4>&2 1>/dev/null 2>/dev/null
         else
 		### Inherit user's env for system commands, but set C locale
-                ( su - "$RUNAS_USER" -c " (LANG=C; LC_ALL=C; export LANG LC_ALL; $*) 2>&4 1>&3" ) 3>&1 4>&2 1>/dev/null 2>/dev/null
+                ( su - "$RUNAS_USER" -c " ( LANG=C; LC_ALL=C; export LANG LC_ALL; $* ) 2>&4 1>&3" ) 3>&1 4>&2 1>/dev/null 2>/dev/null
         fi
 }
 
