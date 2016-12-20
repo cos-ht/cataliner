@@ -12,10 +12,11 @@
     <instance name='jenkins' enabled='false'>
       <method_context project=':default' resource_pool=':default' working_directory=':default'>
         <method_credential limit_privileges=':default'
-         privileges='basic,net_privaddr' supp_groups=':default'
+         privileges='basic,net_privaddr,file_dac_read,file_dac_write,file_dac_search,proc_audit,proc_taskid,proc_setid,sys_resource' supp_groups=':default'
          group=':default' user='root'/>
         <!-- NOTE: this privilege set allows an unprivileged user account
-             to utilize privileged ports like HTTP = 80/tcp -->
+             to utilize privileged ports like HTTP = 80/tcp, and to start as
+             root and change into a non-root user via 'su' in cataliner.sh -->
       </method_context>
       <exec_method name='restart' type='method' exec='/etc/init.d/cataliner.sh %m' timeout_seconds='0'>
         <method_context/>
