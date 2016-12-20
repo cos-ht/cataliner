@@ -1218,6 +1218,9 @@ run_as() {
 
 	if [ "$CATALINER_DEBUG" -ge 1 -o x"$CATALINER_DEBUG_RUNAS" != x ]; then
 		echo "INFO: Running '($*)' in context of '$RUNAS_USER'..." >&2
+		id; id "$1"
+		# Ignore failures on systems that don't have this:
+		ppriv $$ 2>/dev/null || true
 	fi
 	### TODO: if "su" causes problems, this can be expanded to some
 	### OS-specific techniques like sudo, pfexec, or RBAC?..
@@ -4134,7 +4137,7 @@ case "$CATALINER_SCRIPT_APP" in
 		#ftp_proxy="$http_proxy"
 		#export http_proxy https_proxy ftp_proxy
 
-		[ x"$CATALINER_REGEX_STARTED" != 'x-' ] && CATALINER_REGEX_STARTED='INFO: Jenkins is fully up and running'
+		[ x"$CATALINER_REGEX_STARTED" != 'x-' ] && CATALINER_REGEX_STARTED='INFO:? .*Jenkins is fully up and running'
 		[ x"$CATALINER_WORKDIR" = x ] && CATALINER_WORKDIR="$CATALINER_APPSERVER_DIR/logs"
 		;;
 	*generic-tomcat*)
